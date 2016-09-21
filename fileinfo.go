@@ -54,8 +54,8 @@ func DirIterate(dirPath, suffix string, fout *os.File) (/*files []string,*/ err 
     suffix = strings.ToUpper(suffix)
     err = filepath.Walk(dirPath,  func(filename string, fi os.FileInfo, err error) error {
     if fi.IsDir() {
-        return errors.New("is no file")
-//        return nil
+//        return errors.New("is no file")
+        return nil
     }
    if strings.HasSuffix(strings.ToUpper(fi.Name()), suffix) {
         fout.WriteString(fi.Name())
