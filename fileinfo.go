@@ -66,25 +66,10 @@ func DirIterate(dirPath, suffix string, fout *os.File) (/*files []string,*/ err 
         sha1h,_ := hashNum(filename)
         fout.WriteString(sha1h)
         fout.WriteString("\n")
-        fmt.Println(fi.Size())
     }
     return nil
     })
 
     return err
-    //CheckErr(err)
-    //return files, err
 }
-/*
-func main() {
-        userFile := "out.txt"
-        fout,err := os.Create(userFile)
-        defer fout.Close()
-        if err != nil {
-                fmt.Println(userFile,err)
-                return
-        }
-    DirIterate("abc", "txt", fout)
-    //fmt.Println(files, err)
-}
-*/
+
