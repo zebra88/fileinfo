@@ -5,23 +5,88 @@ import (
         "fmt"
         "os"
         "io"
-        "errors"
+//        "errors"
         "path/filepath"
         "strings"
         "crypto/sha1"
        )
-
-type result struct {
-    fileName string
-    size    int 
-    hash    string
-}
 
 func CheckErr(err error) {  
     if nil != err {  
         panic(err)  
     }  
 }  
+
+
+type InfoEntry struct {
+    FileName string
+    Size    int64
+    Hash    string
+}
+
+type InfoManager struct {
+    infos []InfoEntry
+}
+
+func NewInfoManager() *InfoManager {
+    return &InfoManager{make([]InfoEntry,0)}
+}
+
+func (m *InfoManager) Len() int {
+    return len(m.infos)
+}
+func (m *InfoManager) Add(info *InfoEntry) {
+    m.infos = append(m.infos, *info)
+}
+
+func (m *InfoManager) Show() {
+    if len(m.infos) == 0 {
+        return 
+    }
+    for _, m := range m.infos {
+        fmt.Print(m.FileName)
+        fmt.Print(" ")
+        fmt.Print(m.Size)
+        fmt.Print(" ")
+        fmt.Println(m.Hash)
+       
+    }
+}
+
+func (m *InfoManager) Write2file(fout *os.File) {
+    if len(m.infos) == 0 {
+        return 
+    }
+    for _, m := range m.infos {
+        fout.WriteString(m.FileName)
+        fout.WriteString(" ")
+        str := fmt.Sprintf("%d", m.Size)
+        fout.WriteString(str)
+        fout.WriteString(" ")
+        fout.WriteString(m.Hash)
+        fout.WriteString("\n")
+    }
+}
+
+func (m *InfoManager) CollectInfo(dirPath, suffix string) {
+    suffix = strings.ToUpper(suffix)
+    filepath.Walk(dirPath,  func(filename string, fi os.FileInfo, err error) error {
+    if fi.IsDir() {
+        return nil
+    }
+   if strings.HasSuffix(strings.ToUpper(fi.Name()), suffix) {
+        sha1h,_ := hashNum(filename)
+        m0 := &InfoEntry{
+            fi.Name(),
+            fi.Size(), 
+            sha1h,
+        }
+        m.Add(m0)
+    }
+    return nil
+    })
+}
+
 
 func hashNum(path string) (string, error) {
 
