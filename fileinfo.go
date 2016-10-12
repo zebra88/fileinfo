@@ -110,7 +110,7 @@ func hashNum(path string) (string, error) {
     }
 
     hashName := fmt.Sprintf("%x", sha1h.Sum(nil))
-    fmt.Println(hashName)
+//    fmt.Println(hashName)
     return hashName, nil 
 }
 
