@@ -20,13 +20,16 @@ func main() {
         fmt.Println(err.Error())
         return
     }
-    err = fileinfo.DirIterate(*dirPath, *fileType, fout)
-    if err != nil {
-        fmt.Println("111111")
-        fmt.Println(err.Error())
-        return
+
+    mm := fileinfo.NewInfoManager()
+    if mm == nil {
+        fmt.Println("NewInfoManager failed.")
     }
+    if mm.Len() != 0 {
+        fmt.Println("NewInfoManager failed,not empty.")
+    }
+    mm.CollectInfo(*dirPath, *fileType)
 
-
+    mm.Write2file(fout)
 
 }
